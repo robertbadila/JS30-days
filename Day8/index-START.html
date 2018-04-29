@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+<input type="color">
+<div class="red"></div>
+<div class="yellow"></div>
+<div class="green"></div>
+<div class="blue"></div>
+<div class="pink"></div>
+<div class="hue">special</div>
+
+
+<script>
+  const canvas = document.getElementById('draw');
+  const color = document.querySelector('input');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  ctx.strokeStyle = color.value;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.lineWidth = 10;
+
+  let isDrawing = false;
+  let lastX = 0;
+  let lastY = 0;
+  let hue = 0;
+  let direction = true;
+
+
+  function draw(e){
+    if(!isDrawing) return;
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(e.offsetX, e.offsetY);
+    ctx.stroke();
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    
+    if(ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {   
+    direction = !direction;
+    }
+
+    if(direction){
+      ctx.lineWidth++
+    }else{
+      ctx.lineWidth--
+    }
+
+    if(special === true){
+      hue++;
+    }
+    console.log(ctx.strokeStyle);
+  }
+  
+  canvas.addEventListener('mousedown', (e) =>{
+    isDrawing = true;
+    [lastX, lastY] = [e.offsetX, e.offsetY];
+    });
+
+
+
+
+  let special = false;
+
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', () => isDrawing = false);
+  color.addEventListener('change', function(){
+    ctx.strokeStyle = color.value
+  })
+
+  document.querySelector('.red').addEventListener('click', function(){
+    special = false;
+    ctx.strokeStyle = 'red';
+    color.value = '#FF0000';
+  })
+
+  document.querySelector('.blue').addEventListener('click', function(){
+    special = false;
+    ctx.strokeStyle = 'blue';
+    color.value = '#0000ff';
+  })
+
+  document.querySelector('.green').addEventListener('click', function(){
+    special = false;
+    ctx.strokeStyle = 'green';
+    color.value = '#008000';
+  })
+
+  document.querySelector('.yellow').addEventListener('click', function(){
+    special = false;
+    ctx.strokeStyle = 'yellow';
+    color.value = '#FFFF00';
+  })
+
+  document.querySelector('.pink').addEventListener('click', function(){
+    special = false;
+    ctx.strokeStyle = 'pink';
+    color.value = '#FFC0CB';
+  })
+
+
+  document.querySelector('.hue').addEventListener('click', function(){
+    special = true;
+    ctx.strokeStyle = `hsl${hue}, 100%, 50%`;
+  })  
+
+
+  
+  
+
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+
+  input{
+    position:absolute;
+    top:20px;
+    left:20px;
+    width:150px;
+    height:50px;
+    border:none;
+  }
+
+  .red,
+  .blue,
+  .green,
+  .yellow,
+  .pink,
+  .hue{
+    border-radius:50%;
+    border:1px solid #ccc;
+    display:block;
+    width:20px;
+    height:20px;
+    position:absolute;
+  }
+
+  .red{
+    top:20px;
+    left:190px;
+    background-color:red;
+  }
+  .blue{
+    top:20px;
+    left:220px;
+    background-color:blue;
+  }
+  .green{
+    top:20px;
+    left:250px;
+    background-color:green;
+  }
+
+  .yellow{
+    top:50px;
+    left:205px;
+    background-color:yellow;
+  }
+
+  .pink{
+    top:50px;
+    left:235px;
+    background-color:pink;
+  }
+
+  .hue{
+    top:50px;
+    left:265px;
+    background-color:blueviolet;
+    width:55px;
+    height:20px;
+    text-align:center;
+    color:#fff;
+  }
+
+</style>
+
+</body>
+</html>
